@@ -8,6 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
+// Mongo DB
+using MongoDB.Bson;
+using MongoDB.Driver;
+
 namespace SQL_MongoDB
 {
     public partial class Form1 : Form
