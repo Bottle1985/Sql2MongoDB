@@ -1,0 +1,8 @@
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\bin\Debug\SQL_MongoDB.exe
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\bin\Debug\SQL_MongoDB.pdb
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\obj\x86\Debug\SQL_MongoDB.Form1.resources
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\obj\x86\Debug\SQL_MongoDB.Properties.Resources.resources
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\obj\x86\Debug\SQL_MongoDB.csproj.GenerateResource.Cache
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\obj\x86\Debug\SQL_MongoDB.exe
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\obj\x86\Debug\SQL_MongoDB.pdb
+C:\Users\Bottle\Documents\Visual Studio 2010\Projects\SQL_MongoDB\SQL_MongoDB\obj\x86\Debug\SQL_MongoDB.csprojResolveAssemblyReference.cache
