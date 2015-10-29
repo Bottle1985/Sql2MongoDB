@@ -85,5 +85,19 @@ namespace SQL_MongoDB
             textBox6.DataBindings.Add("Text", dataGridView1.DataSource, "HireDate");
 
         }
+        // MongoDB
+        //protected  static IMongoClient _client;
+        //protected  static IMongoDatabase _database;
+
+        //_client = new MongoClient();
+        //_database = _client.GetDatabase("test");
+        private void connect_MG()
+        {
+         MongoServer mongo = MongoServer.Create();
+         mongo.Connect();
+
+         var db = mongo.GetDatabase("test");
+        }
     }
 }
+
