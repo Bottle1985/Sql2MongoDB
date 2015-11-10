@@ -9,10 +9,11 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 // Insert Mongo
 using System.Threading.Tasks;
+
 // Mongo DB
 using MongoDB.Bson;
 using MongoDB.Driver;
-
+using MongoDB.Driver.Builders;
 
 namespace SQL_MongoDB
 {
@@ -71,6 +72,7 @@ namespace SQL_MongoDB
             binding();
             disconnect();
         }
+        private MongoServer mongo = MongoServer.Create();
         private void binding()
         {
             textBox1.DataBindings.Clear();
@@ -104,7 +106,7 @@ namespace SQL_MongoDB
         }
         private void insert_MongoDB()
         {
-            MongoServer mongo = MongoServer.Create();
+            //MongoServer mongo = MongoServer.Create();
       
             mongo.Connect();
 
@@ -143,6 +145,7 @@ namespace SQL_MongoDB
 
             var collection = db.GetCollection<BsonDocument>("restaurants");
             collection.Insert(document);
+            mongo.Disconnect();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -151,11 +154,28 @@ namespace SQL_MongoDB
         }
         private void find_mongoDB()
         {
+            //MongoServer mongo = MongoServer.Create();      
+            mongo.Connect();
+            var db = mongo.GetDatabase("test");
+            var collection = db.GetCollection<BsonDocument>("restaurants");
+            var filter = new BsonDocument();
+            var query = Query.And(
+                                Query.EQ("name", "Vella"),
+                                Query.EQ("restaurant_id", "41704620" )
+                                );
+            BsonDocument person = collection.FindOne(query);
+            if (person != null)
+            {
+                String status = person["address"].ToString();
+                MessageBox.Show(status);
+            }
+            
+            mongo.Disconnect();
 
         }
         private void button2_Click(object sender, EventArgs e)
         {
-
+            find_mongoDB();
         }
     }
 }
