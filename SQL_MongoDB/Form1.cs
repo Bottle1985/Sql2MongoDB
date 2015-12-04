@@ -19,6 +19,7 @@ namespace SQL_MongoDB
 {
     public partial class Form1 : Form
     {
+        #region Train SQL to NOSQL
         private SqlConnection con;
         private DataTable dt = new DataTable("dtCustomer");
         private SqlDataAdapter da = new SqlDataAdapter();
@@ -177,6 +178,62 @@ namespace SQL_MongoDB
         {
             find_mongoDB();
         }
+         #endregion
+        #region Translate SQL to NOSQL
+         private static SqlConnection _sqlServer;
+        private static MongoServer _mongoServer;
+        private static string[] _args;
+        // static SqlConnection SqlServer
+        static SqlConnection SqlServer
+        {
+            get
+            {
+                if (_sqlServer == null)
+                {
+                    try
+                    {
+                        //_sqlServer = new SqlConnection(_args[0]);
+                        _sqlServer = new SqlConnection("Data Source=(local)\\SQLEXPRESS; Initial Catalog=SQL2MONGODB; Persist Security Info=True; User ID=Boong;Password=77k1636k");
+                        _sqlServer.Open();
+                    }
+                    catch (Exception)
+                    {
+                        throw new ApplicationException(
+                            "SQL SERVER connection failed. \r\nPlease check if your connection string is correct and your database is online.");
+                    }
+                }
+                return _sqlServer;
+            }
+        }
+         static MongoServer MongoServer
+         {
+             get
+             {
+                 try
+                 {
+                     return _mongoServer ?? (_mongoServer = MongoServer.Create(_args[1]));
+                     //return _mongoServer ?? (_mongoServer = MongoServer.Create(_args[1]));
+                 }
+                 catch (Exception)
+                 {
+                     throw new ApplicationException(
+                         "MONGODB SERVER connection failed. \r\nPlease check if your connection string is correct and your database is online.");
+                 }
+             }
+         }
+         static IDataReader ExecuteReader(string query)
+         {
+             var sqlCommand = new SqlCommand(query, SqlServer);
+             return sqlCommand.ExecuteReader();
+         }
+         private void button3_Click(object sender, EventArgs e)
+         {
+             var tableReader = ExecuteReader("SELECT * FROM {0}");
+         }
+        #endregion
+
+        
+
     }
 }
 
