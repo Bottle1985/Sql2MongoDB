@@ -180,7 +180,7 @@ namespace SQL_MongoDB
         }
          #endregion
         #region Translate SQL to NOSQL
-         private static SqlConnection _sqlServer;
+        private static SqlConnection _sqlServer;
         private static MongoServer _mongoServer;
         private static string[] _args;
         // static SqlConnection SqlServer
@@ -193,7 +193,7 @@ namespace SQL_MongoDB
                     try
                     {
                         //_sqlServer = new SqlConnection(_args[0]);
-                        _sqlServer = new SqlConnection("Data Source=(local)\\SQLEXPRESS; Initial Catalog=SQL2MONGODB; Persist Security Info=True; User ID=Boong;Password=77k1636k");
+                        _sqlServer = new SqlConnection("Data Source=(local)\\SQLEXPRESS; Initial Catalog=SQL2MONGODB; Persist Security Info=True; User ID=Boong;Password=77k1636");
                         _sqlServer.Open();
                     }
                     catch (Exception)
@@ -228,7 +228,20 @@ namespace SQL_MongoDB
          }
          private void button3_Click(object sender, EventArgs e)
          {
-             var tableReader = ExecuteReader("SELECT * FROM {0}");
+             var tableReader = ExecuteReader("SELECT * FROM People");
+             // Call Read before accessing data.
+             while (tableReader.Read())
+             {
+                 ReadSingleRow((IDataRecord)tableReader);
+             }
+
+             // Call Close when done reading.
+             tableReader.Close();
+             _sqlServer.Close();
+         }
+         private static void ReadSingleRow(IDataRecord record)
+         {
+             Console.WriteLine(String.Format("{0}, {1}", record[0], record[1]));
          }
         #endregion
 
