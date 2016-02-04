@@ -182,7 +182,7 @@ namespace SQL_MongoDB
         #region Translate SQL to NOSQL
         private static SqlConnection _sqlServer;
         private static MongoServer _mongoServer;
-        private static string[] _args;
+        // private static string[] _args;
         // static SqlConnection SqlServer
         static SqlConnection SqlServer
         {
@@ -211,7 +211,7 @@ namespace SQL_MongoDB
              {
                  try
                  {
-                     return _mongoServer ?? (_mongoServer = MongoServer.Create(_args[1]));
+                     return _mongoServer ?? (_mongoServer = MongoServer.Create());
                      //return _mongoServer ?? (_mongoServer = MongoServer.Create(_args[1]));
                  }
                  catch (Exception)
@@ -226,26 +226,71 @@ namespace SQL_MongoDB
              var sqlCommand = new SqlCommand(query, SqlServer);
              return sqlCommand.ExecuteReader();
          }
+         static DataTable ExecuteQuery(string query)
+         {
+             var dataTable = new DataTable();
+             using (var sqlCommand = new SqlCommand(query, SqlServer))
+             {
+                 var reader = sqlCommand.ExecuteReader();
+                 dataTable.Load(reader);
+             }
+             return dataTable;
+         }
          private void button3_Click(object sender, EventArgs e)
          {
-             var tableReader = ExecuteReader("SELECT * FROM People");
              // Call Read before accessing data.
-             while (tableReader.Read())
+             var tableName = "People";
+             var tableSchema = ExecuteQuery("SELECT * FROM People");
+             var destMongoDatabase = SqlServer.Database;
+             var mongoDb = MongoServer.GetDatabase(destMongoDatabase);
+             var mongoCollection = mongoDb.GetCollection<BsonDocument>(tableName);
+             using (var tableReader = ExecuteReader("SELECT * FROM People"))
              {
-                 ReadSingleRow((IDataRecord)tableReader);
-             }
+                 while (tableReader.Read())
+                 {
+                     ReadSingleRow((IDataRecord)tableReader);
+                     // Convert here
+                     var document = new BsonDocument();
+                     foreach (DataColumn column in tableSchema.Columns)
+                     {
+                         var value = tableReader.GetValue(column.Ordinal);
+                         switch (value.GetType().ToString())
+                         {
+                             case "System.Decimal":
+                                 value = tableReader.GetDouble(column.Ordinal);
+                                 break;
+                             case "System.DBNull":
+                                 value = BsonNull.Value;
+                                 break;
+                         }
 
+                         BsonValue bsonValue;
+                         document.Add(column.ColumnName,
+                                      BsonTypeMapper.TryMapToBsonValue(value, out bsonValue)
+                                          ? bsonValue
+                                          : value.ToString());
+                     }
+                     mongoCollection.Insert(document);
+                 }
+                 tableReader.Close();
+             }
              // Call Close when done reading.
-             tableReader.Close();
+             
              _sqlServer.Close();
          }
          private static void ReadSingleRow(IDataRecord record)
          {
              Console.WriteLine(String.Format("{0}, {1}", record[0], record[1]));
          }
+        
+         private void button4_Click(object sender, EventArgs e)
+         {
+
+             MessageBox.Show("Be happy");
+         }
         #endregion
 
-        
+
 
     }
 }
