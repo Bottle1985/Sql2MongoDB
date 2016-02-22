@@ -285,8 +285,19 @@ namespace SQL_MongoDB
         
          private void button4_Click(object sender, EventArgs e)
          {
+             //_mongoServer = MongoServer.Create();
+             var _database = MongoServer.GetDatabase("SQL2MONGODB");
+             var collection = _database.GetCollection<BsonDocument>("People");
+             var filter = new BsonDocument();
 
-             MessageBox.Show("Be happy");
+             var query = Query.And(
+                              Query.EQ("Id", "4"),
+                              Query.EQ("Age", "30")
+                              );          
+
+             BsonDocument sample = collection.FindOne(query);
+             var cursor = collection.FindAll();
+             MessageBox.Show("Be happy " + cursor + " Bottle " + sample["Name"]);
          }
         #endregion
 
